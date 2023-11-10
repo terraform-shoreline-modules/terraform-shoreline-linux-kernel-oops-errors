@@ -1,0 +1,154 @@
+{
+  "name": "kernel_oops_errors",
+  "description": "Kernel Oops Errors are system crashes that occur when the Linux kernel detects an unexpected situation or behavior in the system. These errors can occur for a variety of reasons, including hardware failures, software bugs, or issues with system configuration. When a kernel oops occurs, it can cause system instability, data loss, and other issues, making it critical for software engineers to quickly diagnose and resolve the underlying cause of the error.",
+  "params": [
+    {
+      "name": "STABILITY_TEST_TIMEOUT",
+      "value": ""
+    },
+    {
+      "name": "MAX_TEMPERATURE",
+      "value": ""
+    },
+    {
+      "name": "NUM_CPU_CORES",
+      "value": ""
+    },
+    {
+      "name": "DRIVE",
+      "value": ""
+    },
+    {
+      "name": "VERSION_NUMBER",
+      "value": ""
+    },
+    {
+      "name": "HOST_NAME",
+      "value": ""
+    },
+    {
+      "name": "K8S_CLUSTER_NAME",
+      "value": ""
+    },
+    {
+      "name": "NAMESPACE",
+      "value": ""
+    }
+  ],
+  "cells": [
+    {
+      "name": "cell_1",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Kernel Oops Errors.\nKernel Oops Errors are system crashes that occur when the Linux kernel detects an unexpected situation or behavior in the system. These errors can occur for a variety of reasons, including hardware failures, software bugs, or issues with system configuration. When a kernel oops occurs, it can cause system instability, data loss, and other issues, making it critical for software engineers to quickly diagnose and resolve the underlying cause of the error."
+    },
+    {
+      "name": "cell_2",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check for any recent kernel panic messages"
+    },
+    {
+      "name": "cell_3",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `dmesg | grep -i \"kernel panic\"`"
+    },
+    {
+      "name": "cell_4",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check if kernel is tainted"
+    },
+    {
+      "name": "cell_5",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `dmesg | grep -i \"tainted\"`"
+    },
+    {
+      "name": "cell_6",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the system logs for any related errors"
+    },
+    {
+      "name": "cell_7",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `grep -i \"Oops\\|kernel panic\" /var/log/messages`"
+    },
+    {
+      "name": "cell_8",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check for any hardware errors"
+    },
+    {
+      "name": "cell_9",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `sudo smartctl -a /dev/${DRIVE}`"
+    },
+    {
+      "name": "cell_10",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check for any recent Oops messages"
+    },
+    {
+      "name": "cell_11",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `dmesg | grep -i \"Oops\"`"
+    },
+    {
+      "name": "cell_12",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the status of loaded kernel modules"
+    },
+    {
+      "name": "cell_13",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `lsmod`"
+    },
+    {
+      "name": "cell_14",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check system resource usage"
+    },
+    {
+      "name": "cell_15",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `top`"
+    },
+    {
+      "name": "cell_16",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Overclocking: Overclocking the CPU or other components can cause instability in the system, leading to Kernel Oops errors."
+    },
+    {
+      "name": "cell_17",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_cpu_stability_test($STABILITY_TEST_TIMEOUT, $MAX_TEMPERATURE, $NUM_CPU_CORES)"
+    },
+    {
+      "name": "cell_18",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Upgrade or patch the kernel to the latest version. This can help address any known bugs or issues that were fixed in the newer version."
+    },
+    {
+      "name": "cell_19",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_update_kernel($VERSION_NUMBER)"
+    }
+  ]
+}
